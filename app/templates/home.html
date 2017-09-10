@@ -1,1 +1,27 @@
 <h1>Home Page</h1>
+<ul>
+  <li ng-repeat="room in home.rooms"> {{ room.$value }}</li>
+</ul>
+
+<form ng-app="blocChat" ng-controller="HomeCtrl">
+    <div>
+        <label>Create a New Room</label>
+        <label for="name">Enter a room name:</label>
+        <input ng-model="room" id="name" name="user_name">
+    </div>
+    <div class="button">
+      <button type="submit">Cancel</button>
+    </div>
+    <div class="button"  ng-submit="Room.add()">
+      <button type="submit">Create a room</button>
+    </div>
+</form>
+<!--
+
+
+Create a form to submit the room name
+Create a function in the Room service to save the room to firebase
+Connect the form to the service function through the controller
+(ng-submit, ng-model)
+
+-->
