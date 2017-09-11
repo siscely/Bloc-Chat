@@ -3,16 +3,16 @@
   <li ng-repeat="room in home.rooms"> {{ room.$value }}</li>
 </ul>
 
-<form ng-app="blocChat" ng-controller="HomeCtrl">
+<form ng-submit="home.createRoom(home.newRoomName)">
     <div>
         <label>Create a New Room</label>
         <label for="name">Enter a room name:</label>
-        <input ng-model="room" id="name" name="user_name">
+        <input ng-model="home.newRoomName" id="name" name="user_name">
     </div>
     <div class="button">
       <button type="submit">Cancel</button>
     </div>
-    <div class="button"  ng-submit="Room.add()">
+    <div class="button"  >
       <button type="submit">Create a room</button>
     </div>
 </form>
