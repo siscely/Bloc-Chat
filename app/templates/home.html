@@ -5,8 +5,8 @@
 
 <form ng-submit="home.createRoom(home.newRoomName)">
     <div>
-        <label>Create a New Room</label>
-        <label for="name">Enter a room name:</label>
+        <label>Create a New Room</label></br>
+        <label for="name">Enter a room name:</label></br>
         <input ng-model="home.newRoomName" id="name" name="user_name">
     </div>
     <div class="button">
@@ -17,16 +17,16 @@
     </div>
 </form>
 
-<h2>{{ home.currentRoom.$value }}</h2>
 <ul>
   <li ng-repeat="message in home.messages">{{message.username}}:{{message.content}}</li>
+  <form ng-submit="home.checkUsername(home.userName) ng-if="home.currentUser">
+      <div>
+          <label>Set a username</label></br></br>
+          <label>This name will appear when you send messages:</label></br></br>
+          <input type="text" ng-model="home.userName"></br>
+      </div>
+      <div class="button">
+      </br><button type="submit"> Set username</button>
+      </div>
+  </form>
 </ul>
-<!--
-
-
-Create a form to submit the room name
-Create a function in the Room service to save the room to firebase
-Connect the form to the service function through the controller
-(ng-submit, ng-model)
-
--->
