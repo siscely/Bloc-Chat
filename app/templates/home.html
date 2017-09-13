@@ -1,6 +1,6 @@
 <h1>Home Page</h1>
 <ul>
-  <li ng-repeat="room in home.rooms"> ng-click = "home.getMessage(room.$key)" {{ room.$value }} {{home.Message}}</li>
+  <li ng-repeat="room in home.rooms" ng-click="home.selectRoom(room)"> {{ room.$value }}</li>
 </ul>
 
 <form ng-submit="home.createRoom(home.newRoomName)">
@@ -16,6 +16,11 @@
       <button type="submit">Create a room</button>
     </div>
 </form>
+
+<h2>{{ home.currentRoom.$value }}</h2>
+<ul>
+  <li ng-repeat="message in home.messages">{{message.username}}:{{message.content}}</li>
+</ul>
 <!--
 
 
