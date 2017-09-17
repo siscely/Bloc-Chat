@@ -6,11 +6,12 @@
       this.createRoom = Room.add;
       this.checkUsername = User.getUsername;
       this.createUsername = User.createUsername;
+      this.sendMessage = Message.send;
 
       this.selectRoom = function(room){
       this.currentRoom = room;
       this.messages = Message.getByRoomId(room.$id);
-    }
+      }
   }
 
     angular

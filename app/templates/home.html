@@ -19,7 +19,8 @@
 
 <ul>
   <li ng-repeat="message in home.messages">{{message.username}}:{{message.content}}</li>
-  <form ng-submit="home.createUsername(home.userName)" ng-if="!home.checkUsername()">
+
+<form ng-submit="home.createUsername(home.userName)" ng-if="!home.checkUsername()">
       <div>
           <label>Set a username</label></br></br>
           <label>This name will appear when you send messages:</label></br></br>
@@ -27,6 +28,19 @@
       </div>
       <div class="button">
       </br><button type="submit"> Set username</button>
+      </div>
+  </form>
+</ul>
+
+<ul>
+  <li ng-repeat="message in home.messages"></li>
+  <form ng-submit="home.sendMessage(home.message)" ; "home.createUsername(home.message.username)"; home.selectRoom(room)>
+      <div>
+          <label for="msg">Message:</label>
+          <textarea id="msg" ng-model="home.message"></textarea>
+      </div>
+      <div class="button">
+      </br><button type="submit"> Send your message</button>
       </div>
   </form>
 </ul>

@@ -12,9 +12,7 @@
    }
 
    return user;
-  //  if (!currentUser || currentUser === '') {
-  //    // Do something to allow users to set their username
-  //  }
+  
  }
 
  angular
