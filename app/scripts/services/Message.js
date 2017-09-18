@@ -9,13 +9,18 @@
             // Filter the messages by their room ID.
         var filteredMessages = $firebaseArray(ref.orderByChild("roomId").equalTo(roomId));
         return filteredMessages;
+    };
+
+    Message.send = function(newMessage,userName,roomId) {
+        // Send method logic
+        var message = {
+          content: newMessage,
+          username: userName,
+          roomId: roomId
         };
 
-        Message.send = function(newMessage) {
-          
-        // Send method logic
-        messages.$add(newMessage);
-        };
+        messages.$add(message);
+    };
 
     return Message;
   }

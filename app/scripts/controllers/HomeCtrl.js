@@ -9,8 +9,8 @@
       this.sendMessage = Message.send;
 
       this.selectRoom = function(room){
-      this.currentRoom = room;
-      this.messages = Message.getByRoomId(room.$id);
+        this.currentRoom = room;
+        this.messages = Message.getByRoomId(room.$id);
       }
   }
 
