@@ -610,4 +610,48 @@ Call $uibModal.open() and pass in a configuration object.
 1. Verify that providing a username grants access to Bloc Chat.
 1. Verify that the username is saved to the appropriate cookie.
 
+## Send Messages
+As a user, I want to send messages associated with my username in a chat room
+
+### Message Factory
+message bar at the bottom of the chat
+
+How can I send messages?*
+
+Add a method to your Message factory called send, that takes a message object as an argument and submits it to your Firebase server:
+```
+(function() {
+  function Message($firebaseArray) {
+    var Message = {};
+    var ref = firebase.database().ref().child("messages");
+    var messages = $firebaseArray(ref);
+
+    Message.getByRoomId = function(roomId) {
+        // .. logic for filtering messages
+    };
+
+    Message.send = function(newMessage) {
+        // Send method logic
+    };
+
+    return Message;
+  }
+
+  angular
+    .module('blocChat')
+    .factory('Message', ['$firebaseArray', Message]);
+})();
+```
+Create a controller method that is invoked via ngClick or ngSubmit on the frontend.
+
+### Associate Messages with Usernames
+How can I make sure that the messages that a user sends are associated with their username?*
+
+In the message object detailed earlier, there was a username property that held a string referring to the user crafting the message. Populate that property with the current user's username by injecting the $cookies service and referencing the current user object on it.
+
+### Test Your Code
+1. Launch Bloc Chat, open a chat room.
+1. Verify that messages are submitted to the active chat room.
+1. Verify that your username is associated with each message you create.
+1. Verify that new messages are associated with no chat rooms other than the active.
 
