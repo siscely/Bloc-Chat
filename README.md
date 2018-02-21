@@ -550,4 +550,64 @@ Messages depend on the ID of a room, you will need to pass an argument into the 
 
 ### Footnotes
 The event listener (.on('<event name>')) chained to the orderByChild() method is not required because messages will always be ordered by roomId in this application.
+ 
+## Set Username
+As a user, I want to set my username to display in chat rooms
+
+### Use Cookies
+How can I efficiently store a username?*
+
+A username is a string identifying a user. A common way to store a string in your browser is to use cookies. Angular has an external module for including the services and methods associated with cookies. To integrate the module:
+
+Include the Angular cookies module via a <script> tag in index.html:  https://ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-cookies.js, where X.Y.Z is the AngularJS version you are running.
+Inject the ngCookies module into your Angular app's dependency array.
+How can I require each user to enter a username when they visit Bloc Chat for the first time?*
+
+Angular modules have a .run() method that runs code when the app instance is created. Use a .run() block to make sure that a username is set at the time the app is initialized. You will need to inject the $cookies service into the run block's dependencies to check for the presence of the cookie holding the username:
+```
+(function() {
+  function BlocChatCookies($cookies) {
+    var currentUser = $cookies.get('blocChatCurrentUser');
+    if (!currentUser || currentUser === '') {
+      // Do something to allow users to set their username
+    }
+  }
+
+  angular
+    .module('blocChat')
+    .run(['$cookies', BlocChatCookies]);
+})();
+```
+### Prompt the User
+How can a user enter a username?*
+
+If the app detects that a username isn't present, there needs to be a way to enter one. Inside the conditional that checks for the presence of a username, trigger another UI Bootstrap modal that requires a user to enter one. Do not provide a “cancel” option this time, so the user cannot access the chat until their username has been set. To create a fully functional modal:
+
+Inject the $uibModal service in the .run() block.
+Call $uibModal.open() and pass in a configuration object.
+### Create a template and a controller for the modal.
+```
+(function() {
+  function BlocChatCookies($cookies, $uibModal) {
+    var currentUser = $cookies.get('blocChatCurrentUser');
+    if (!currentUser || currentUser === '') {
+      $uibModal.open({
+        // Modal configuration object properties
+      })
+    }
+  }
+
+  angular
+    .module('blocChat')
+    .run(['$cookies', '$uibModal', BlocChatCookies]);
+})();
+```
+### Test Your Code
+1. Launch Bloc Chat.
+1. Verify that a modal prompts you for a username.
+1. Verify that you cannot dismiss the modal.
+1. Verify that submitting an empty username (or whitespace) does not succeed.
+1. Verify that providing a username grants access to Bloc Chat.
+1. Verify that the username is saved to the appropriate cookie.
+
 
