@@ -473,4 +473,81 @@ When you've finished, you should see your array of rooms update in real time.
 ### Test Your Code
 Launch Bloc Chat, verify that your array of rooms updates in real time as soon as you create one.
 
+## List Messages
+As a user, I want to see a list of messages in each chat room
+
+### Create a Container
+How can I display an individual room's content?*
+
+room with message list
+Chat rooms tend to be designed so that only one room's messages show at a time. Create and style a container for holding a list of messages to the right of the list of available chat rooms. The active room should be stored in a $scope object in the main controller, so that the title of the active room changes every time you visit a different room. The active room should be triggered by clicking on the name of the room in the sidebar.
+
+### Associate Messages With a Room
+How can I associate messages with a room so that only an active room's messages show when I've selected it?*
+
+Associating objects with other related objects, like rooms with messages, requires using a reference to the parent data (in this case, the room) in the child data. When creating a message object, each message object in your Firebase database should have four properties:
+```
+{
+    username: "<USERNAME HERE>",
+    content: "<CONTENT OF THE MESSAGE HERE>",
+    sentAt: "<TIME MESSAGE WAS SENT HERE>",
+    roomId: "<ROOM UID HERE>"
+}
+ ```
+The last property, roomId, references the room where the message was sent. The ID is generated every time an object saves to Firebase, and can be viewed on the Firebase web interface.
+
+Create a few rooms using the method you programmed in the last story so that you can use the IDs generated from those rooms to complete this story. Firebase UIDs (or unique identifiers) are strings of randomly generated characters like -Jf1GqAZWtS94xlfZA4a.
+
+Create a few messages manually on the Firebase dashboard with the above data structure, and associate them all with one of your rooms so you can test querying messages with the rooms.
+
+### Query Messages with a Factory
+Create a Message factory in Angular that defines all Message-related API queries. Create a reference to your Firebase database inside, and inject the $firebaseArray service provided by AngularFire:
+```
+(function() {
+  function Message($firebaseArray) {
+    var Message = {};
+    var ref = firebase.database().ref().child("messages");
+
+    return Message;
+  }
+
+  angular
+    .module('blocChat')
+    .factory('Message', ['$firebaseArray', Message]);
+})();
+```
+How can I query messages for an active room?*
+
+Using the child() method on the $firebaseArray service again, query messages instead of rooms this time. To get the messages for a given room, you need to chain the child() method with Firebase's orderByChild()1 method, targeting the roomId child.
+
+Recall that roomId is a nested property of each message object. A nested property in Firebase is equivalent to a child, hence its compatibility with the  orderByChild() method.
+
+Messages depend on the ID of a room, you will need to pass an argument into the  getByRoomId method that contains the roomId associated with a rooms message. With the roomId, use Firebase's equalTo() method to find all messages whose  roomId property is equal to the roomId in the argument:
+```
+(function() {
+  function Message($firebaseArray) {
+    var Message = {};
+    var ref = firebase.database().ref().child("messages");
+    var messages = $firebaseArray(ref);
+
+    Message.getByRoomId = function(roomId) {
+        // Filter the messages by their room ID.
+    };
+
+    return Message;
+    };
+  }
+
+  angular
+    .module('blocChat')
+    .factory('Message', ['$firebaseArray', Message]);
+})();
+```
+### Test Your Code
+1. Launch Bloc Chat.
+1. Verify that messages appear when selecting a conversation.
+1. Verify that switching chat rooms replaces the messages with those associated with the new chat room.
+
+### Footnotes
+The event listener (.on('<event name>')) chained to the orderByChild() method is not required because messages will always be ordered by roomId in this application.
 
