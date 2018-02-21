@@ -419,3 +419,58 @@ Create a controller and associate it with the home template in a $state. Inject 
 ### Test Your Code
 Launch Bloc Chat, verify that empty chat rooms appear.
 
+## Create Chat Rooms
+As a user, I want to create chat rooms
+
+### Modify the Factory
+How do I create Room objects with AngularFire?*
+
+You can call AngularFire's $add() on any array created or retrieved with the  $firebaseArray service. In this case, the array is the data stored in the rooms variable in the Room service. Use the AngularFire method $add() inside a Room factory method add. This will give the application the ability to add rooms to the firebase database. You don't want AngularFire specifics leaking into the rest of our application. To avoid this leaking, we will create an abstract method in the service. This may seem like unnecessary duplication of another add method, but this purposeful abstraction will create a nice barrier between AngularFire and the application's controllers. This is the main purpose for creating this service and a foundation for decoupled code.
+```
+(function() {
+  function Room($firebaseArray) {
+    var Room = {};
+    var ref = firebase.database().ref().child("rooms");
+    var rooms = $firebaseArray(ref);
+
+    Room.all = rooms;
+
+    Room.add = function(room) {
+        //Use the firebase method $add here
+    }
+
+    return Room;
+  }
+
+  angular
+    .module('blocChat')
+    .factory('Room', ['$firebaseArray', Room]);
+})();
+```
+The Room service method add should take a room object as an argument. This room object will need to be created outside of this service. Where could you create the room object? 
+
+Include Bootstrap
+How can I initiate room creation in the app's interface?*
+
+There needs to be a form that you can use to submit the new room's data using  ngClick or ngSubmit. Presenting a modal is an unobtrusive way to trigger a form on the interface. Use UI Bootstrap's $uibModal service to define a method for toggling a modal on the frontend. To fully integrate a UI Bootstrap modal:
+
+Include the UI Bootstrap library via a <script> tag on index.html. We will be using version 2.5.0.
+```
+~/bloc/bloc-chat/app/index.html
+...
+ 
+ <!-- AngularUI Bootstrap -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+...
+```
+Inject the module into your Angular app's dependency array
+
+### Create a separate controller for the modal
+Inject the proper dependencies for using the modal (see the UI Bootstrap documentation)
+Add methods to open, close and submit data to Firebase from the modal
+When you've finished, you should see your array of rooms update in real time.
+
+### Test Your Code
+Launch Bloc Chat, verify that your array of rooms updates in real time as soon as you create one.
+
+
