@@ -361,4 +361,61 @@ Stage all the files in your project $ git add .
 Commit all the files with a message $ git commit -m "Finished basic setup"
 Push your work to GitHub $ git push origin master
 
+### List Chat Rooms
+As a user, I want to see a list of available chat rooms
+
+## Create fake 'rooms' in Firebase
+Log into firebase, click the 'Database' link on the sidebar
+Add a 'rooms' key to the db. Add rooms as the key, but instead of value, click the  + to add sub objects under rooms
+Add a few generic rooms to the database. Put something like name: 'room1', value: 'room1' in as root elements of the db. It should look something like this:
+```
+bloc-chat-1482f
+|__rooms
+    |__1:"room1"
+    |__2:"room2"
+    |__3:"room3"
+  ```
+### Create a Factory
+list of chat rooms mockup
+How can I query a list of Rooms from Firebase?*
+
+Create a Room factory in Angular that defines all Room-related API queries. Create a reference to your Firebase database inside, and inject the $firebaseArray service provided by AngularFire:
+```
+(function() {
+  function Room($firebaseArray) {
+    var ref = firebase.database().ref();
+  }
+
+  angular
+    .module('blocChat')
+    .factory('Room', ['$firebaseArray', Room]);
+})();
+```
+Use Firebase's child() method (called on an instance of its API object) to either query an existing set of data or reference one you intend to populate with data in the future. Use the $firebaseArray service to ensure the data is returned as an array:
+```
+(function() {
+  function Room($firebaseArray) {
+    var Room = {};
+    var ref = firebase.database().ref().child("rooms");
+    var rooms = $firebaseArray(ref);
+
+    Room.all = rooms;
+
+    return Room;
+  }
+
+  angular
+    .module('blocChat')
+    .factory('Room', ['$firebaseArray', Room]);
+})();
+```
+Remember to add a html <script> tag with a src link to Room.js from your  index.html file!
+
+## Create a Controller
+How can I display my queried Rooms in the view?*
+
+Create a controller and associate it with the home template in a $state. Inject the Room service so that you can assign the array of objects retrieved by the all method to a $scope variable. Display the rooms in the template using ng-repeat.
+
+### Test Your Code
+Launch Bloc Chat, verify that empty chat rooms appear.
 
