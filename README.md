@@ -449,26 +449,7 @@ You can call AngularFire's $add() on any array created or retrieved with the  $f
 ```
 The Room service method add should take a room object as an argument. This room object will need to be created outside of this service. Where could you create the room object? 
 
-Include Bootstrap
-How can I initiate room creation in the app's interface?*
-
-There needs to be a form that you can use to submit the new room's data using  ngClick or ngSubmit. Presenting a modal is an unobtrusive way to trigger a form on the interface. Use UI Bootstrap's $uibModal service to define a method for toggling a modal on the frontend. To fully integrate a UI Bootstrap modal:
-
-Include the UI Bootstrap library via a <script> tag on index.html. We will be using version 2.5.0.
-```
-~/bloc/bloc-chat/app/index.html
-...
- 
- <!-- AngularUI Bootstrap -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
-...
-```
-Inject the module into your Angular app's dependency array
-
-### Create a separate controller for the modal
-Inject the proper dependencies for using the modal (see the UI Bootstrap documentation)
-Add methods to open, close and submit data to Firebase from the modal
-When you've finished, you should see your array of rooms update in real time.
+There needs to be a form that you can use to submit the new room's data using  ngClick or ngSubmit. The room object was created in home.html file and when the user clicks a room, it gets passed to the controller.
 
 ### Test Your Code
 Launch Bloc Chat, verify that your array of rooms updates in real time as soon as you create one.
@@ -562,44 +543,45 @@ A username is a string identifying a user. A common way to store a string in you
 Include the Angular cookies module via a <script> tag in index.html:  https://ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-cookies.js, where X.Y.Z is the AngularJS version you are running.
 Inject the ngCookies module into your Angular app's dependency array.
 How can I require each user to enter a username when they visit Bloc Chat for the first time?*
-
-Angular modules have a .run() method that runs code when the app instance is created. Use a .run() block to make sure that a username is set at the time the app is initialized. You will need to inject the $cookies service into the run block's dependencies to check for the presence of the cookie holding the username:
-```
-(function() {
-  function BlocChatCookies($cookies) {
-    var currentUser = $cookies.get('blocChatCurrentUser');
-    if (!currentUser || currentUser === '') {
-      // Do something to allow users to set their username
-    }
-  }
-
-  angular
-    .module('blocChat')
-    .run(['$cookies', BlocChatCookies]);
-})();
-```
 ### Prompt the User
 How can a user enter a username?*
 
-If the app detects that a username isn't present, there needs to be a way to enter one. Inside the conditional that checks for the presence of a username, trigger another UI Bootstrap modal that requires a user to enter one. Do not provide a “cancel” option this time, so the user cannot access the chat until their username has been set. To create a fully functional modal:
+```
+ <form ng-submit="home.createUsername(home.userName)" ng-if="!home.checkUsername()">
+    <div>
+        <label>Set a username</label></br></br>
+        <label>This name will appear when you send messages:</label></br></br>
+        <input type="text" ng-model="home.userName"></br>
+    </div>
+    <div class="button">
+    </br><button type="submit"> Set username</button>
+    </div>
+</form>
+```
 
-Inject the $uibModal service in the .run() block.
-Call $uibModal.open() and pass in a configuration object.
-### Create a template and a controller for the modal.
+
 ```
 (function() {
-  function BlocChatCookies($cookies, $uibModal) {
-    var currentUser = $cookies.get('blocChatCurrentUser');
-    if (!currentUser || currentUser === '') {
-      $uibModal.open({
-        // Modal configuration object properties
-      })
-    }
-  }
+ function BlocChatCookies($cookies) {
+   var user = {};
+   var currentUser = $cookies.get('blocChatCurrentUser');
+   // a function to get the username
+   user.getUsername = function(){
+     return $cookies.get('blocChatCurrentUser');
+   }
+   // a function to create the username
+   user.createUsername = function(currentUser){
+     $cookies.put('blocChatCurrentUser', currentUser);
+   }
 
-  angular
-    .module('blocChat')
-    .run(['$cookies', '$uibModal', BlocChatCookies]);
+   return user;
+  
+ }
+
+ angular
+   .module('blocChat')
+   .factory('User', ['$cookies', BlocChatCookies]);
+
 })();
 ```
 ### Test Your Code
